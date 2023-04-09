@@ -1,6 +1,6 @@
 package com.example.spring;
 
-@Component
+@Component("dep1")
 public class CandidateModuleDependency {
 
     public String getData() {

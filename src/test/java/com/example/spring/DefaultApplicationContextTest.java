@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Set;
 
@@ -14,6 +16,33 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class DefaultApplicationContextTest {
 
+    @DisplayName("reflection API")
+    @Test
+    void learningTestForReflectionAPI() {
+
+        final Constructor<?>[] ctors = CandidateModule.class.getConstructors();
+        for (Constructor<?> ctor : ctors) {
+            System.out.println("ctor = " + ctor);
+            final BeanDefinition beanDefinition = new AnnotatedBeanDefinition();
+            beanDefinition.setBeanClassName("candidateModule");
+            final Parameter[] parameters = ctor.getParameters();
+
+            // 의존성들
+            for (Parameter parameter : parameters) {
+                System.out.println("parameter = " + parameter);
+                final Class<?> typeOfDependency = parameter.getType();
+                System.out.println(typeOfDependency);
+                // var beanName = beanNameGenerator.generate(typeOfDependency)
+                beanDefinition.setDependsOn("beanName");
+                for (Annotation annotation : typeOfDependency.getAnnotations()) {
+                    System.out.println("annotation = " + annotation);
+                    final Component component = (Component) annotation;
+                    System.out.println("component = " + component.value());
+                }
+
+            }
+        }
+    }
 
     @DisplayName("러닝 테스트")
     @Test
